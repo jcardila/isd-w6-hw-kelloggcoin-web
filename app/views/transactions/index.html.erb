@@ -6,7 +6,6 @@
 
 <ol>
     <% for transaction in transactions %>
-        <%= transaction.amount %> tampoco funciona
         <% if transaction.from_user == nil %>
             <li><%= "Initial coin offering: #{transaction.amount} KC to #{transaction.to_user.name}" %></li>
         <% else %>
