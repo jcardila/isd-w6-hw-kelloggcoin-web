@@ -1,6 +1,7 @@
 <h1>KelloggCoin Ledger</h1>
 
 <!-- Step 1: List all transaction, starting with the ICO -->
+<h2> Step 1 - Transaction list </h2>
 
 <% transactions = Transaction.all %>
 
@@ -15,6 +16,16 @@
 </ol>
 
 <!-- Step 2: Calculate and display the balances -->
+<h2> Step 2 - Balances </h2>
+
+<% users = User.all %>
+<%
+    for user in users
+        balance = Transaction.where({ to_user_id: user.id }).sum(:amount) - Transaction.where({ from_user_id: user.id }).sum(:amount)
+%>
+        <%= "Balance for #{user.name}: #{balance} KC" %>
+        <br>
+<% end %>
 
 <!-- 
 Expected balances:
@@ -24,3 +35,29 @@ Balance for Evan: 1164 KC
 Balance for Anthony: 1456 KC
 Balance for Krystina: 3516 KC 
 -->
+
+<!-- Extra Fun -->
+<h2>Fun - Transactions table</h2>
+
+<table>
+    <tr>
+        <th>Amount</th>
+        <th>From</th>
+        <th>To</th>
+    </tr>
+    <% for transaction in transactions %>
+        <% if transaction.from_user == nil %>
+            <tr>
+                <td><%= "#{transaction.amount} KC" %></td>
+                <td><%= "Initial coin offering" %></td>
+                <td><%= "#{transaction.to_user.name}" %></td>
+            </tr>
+        <% else %>
+            <tr>
+                <td><%= "#{transaction.amount} KC" %></td>
+                <td><%= "#{transaction.from_user.name}" %></td>
+                <td><%= "#{transaction.to_user.name}" %></td>
+            </tr>
+        <% end %>
+    <% end %>
+</table>
